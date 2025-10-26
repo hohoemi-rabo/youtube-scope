@@ -14,6 +14,7 @@ export interface YouTubeChannel {
 export interface YouTubeVideo {
   id: string;
   channelId: string;
+  channelTitle?: string;
   title: string;
   description?: string;
   thumbnail: string;
@@ -22,6 +23,7 @@ export interface YouTubeVideo {
   viewCount: number;
   likeCount: number;
   commentCount: number;
+  tags?: string[];
   // 分析用の追加フィールド
   daysFromPublished?: number;
   growthRate?: number;
@@ -53,6 +55,12 @@ export interface ChannelSearchResponse {
 export interface ChannelDetailsResponse {
   channel: YouTubeChannel;
   videos: YouTubeVideo[];
+}
+
+export interface KeywordSearchResponse {
+  videos: YouTubeVideo[];
+  query: string;
+  count: number;
 }
 
 // UI State Types
