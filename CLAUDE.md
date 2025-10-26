@@ -4,9 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**チャンネルスコープ (ChannelScope)** - YouTubeチャンネルの成長を可視化する無料分析ツール
+**YouTubeスコープ (YouTubeScope)** - YouTubeチャンネル分析とキーワード検索による動画企画支援ツール
 
-Next.js 15 (App Router) + React 19 + TypeScript + Tailwind CSSで構築されたフルスタックWebアプリケーション。YouTube Data API v3を使用してチャンネル分析・動画統計を提供。
+Next.js 15 (App Router) + React 19 + TypeScript + Tailwind CSSで構築されたフルスタックWebアプリケーション。YouTube Data API v3を使用してチャンネル分析・キーワード検索による動画統計を提供。
+
+**旧名称**: チャンネルスコープ（Phase 5でYouTubeスコープに改名）
 
 ## Essential Commands
 
@@ -56,14 +58,16 @@ User → SearchBar → API Routes → YouTube API Client → Cache Layer → You
 │   ├── api/               # API Routes
 │   │   ├── youtube/       # YouTube API integration
 │   │   │   ├── search/route.ts      # Channel search
-│   │   │   └── channel/[id]/route.ts # Channel details + videos
+│   │   │   ├── channel/[id]/route.ts # Channel details + videos
+│   │   │   └── keyword/route.ts     # [Phase 5] Keyword search
 │   │   └── og/route.tsx   # Dynamic OGP image generation
 │   ├── channel/[id]/      # Channel detail page
+│   ├── keyword/[query]/   # [Phase 5] Keyword search results page
 │   ├── contact/           # Contact page (GitHub Issues)
 │   ├── disclaimer/        # Disclaimer page
 │   ├── privacy/           # Privacy policy
 │   ├── layout.tsx         # Root layout
-│   ├── page.tsx           # Home page
+│   ├── page.tsx           # Home page (2 search types)
 │   └── icon.svg           # Favicon
 ├── components/            # React components
 ├── lib/                   # Utilities
@@ -79,6 +83,7 @@ User → SearchBar → API Routes → YouTube API Client → Cache Layer → You
 |-------|---------|------------|-----------|
 | `/api/youtube/search` | Channel search | 100 units | 30 min |
 | `/api/youtube/channel/[id]` | Channel + videos | 103 units | 30 min |
+| `/api/youtube/keyword` | [Phase 5] Keyword search | 150 units | 30 min |
 
 #### YouTube API Client (`lib/youtube.ts`)
 - Singleton pattern - single instance across requests
@@ -246,11 +251,11 @@ import { formatJapaneseNumber } from '@/lib/format-utils';
 
 ## Project Status
 
-All 4 phases (MVP, Analytics, Optimization, Production) are **complete**.
+**Phases 1-4 complete. Phase 5 in planning.**
 
 The application is deployed at: https://channel-scope.vercel.app
 
-Key features implemented:
+### Completed Features (Phase 1-4)
 - ✅ Channel search with autocomplete
 - ✅ Latest 50 videos analysis
 - ✅ Multi-criteria sorting (5 types)
@@ -261,3 +266,15 @@ Key features implemented:
 - ✅ Contact page (GitHub Issues integration)
 - ✅ Legal pages (disclaimer, privacy)
 - ✅ Japanese number formatting (万/億)
+
+### Phase 5 Features (In Development)
+See `/docs/020-025-*.md` for detailed tickets.
+
+- ⏳ Project rename: チャンネルスコープ → YouTubeスコープ
+- ⏳ Keyword search API (`/api/youtube/keyword`)
+- ⏳ Keyword search page (`/keyword/[query]`)
+- ⏳ Home page update (2 search types)
+- ⏳ Video tags display in VideoCard
+- ⏳ Testing and documentation
+
+**Target completion**: 1 week from start
