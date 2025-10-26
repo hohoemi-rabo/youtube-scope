@@ -59,10 +59,10 @@ User → SearchBar → API Routes → YouTube API Client → Cache Layer → You
 │   │   ├── youtube/       # YouTube API integration
 │   │   │   ├── search/route.ts      # Channel search
 │   │   │   ├── channel/[id]/route.ts # Channel details + videos
-│   │   │   └── keyword/route.ts     # [Phase 5] Keyword search
+│   │   │   └── keyword/route.ts     # Keyword search
 │   │   └── og/route.tsx   # Dynamic OGP image generation
 │   ├── channel/[id]/      # Channel detail page
-│   ├── keyword/[query]/   # [Phase 5] Keyword search results page
+│   ├── keyword/[query]/   # Keyword search results page
 │   ├── contact/           # Contact page (GitHub Issues)
 │   ├── disclaimer/        # Disclaimer page
 │   ├── privacy/           # Privacy policy
@@ -72,6 +72,7 @@ User → SearchBar → API Routes → YouTube API Client → Cache Layer → You
 ├── components/            # React components
 ├── lib/                   # Utilities
 └── types/                 # TypeScript types
+/docs                      # チケット管理（001-025）
 ```
 
 ## API Routes Architecture
@@ -83,12 +84,13 @@ User → SearchBar → API Routes → YouTube API Client → Cache Layer → You
 |-------|---------|------------|-----------|
 | `/api/youtube/search` | Channel search | 100 units | 30 min |
 | `/api/youtube/channel/[id]` | Channel + videos | 103 units | 30 min |
-| `/api/youtube/keyword` | [Phase 5] Keyword search | 150 units | 30 min |
+| `/api/youtube/keyword` | Keyword search | 150 units | 30 min |
 
 #### YouTube API Client (`lib/youtube.ts`)
 - Singleton pattern - single instance across requests
-- Two-step video fetching: playlistItems API → fallback to search API
+- **Two-step video fetching**: playlistItems API → fallback to search API
 - Automatic analytics enrichment (growth rate, engagement, etc.)
+- **Keyword search**: search.list (100 units) + videos.list (50 units) = 150 units total
 - Comprehensive error handling and logging
 
 #### Caching Strategy (`lib/cache.ts`)
@@ -111,7 +113,7 @@ User → SearchBar → API Routes → YouTube API Client → Cache Layer → You
 
 ### Server vs Client Components
 - **Server Components** (default): Header, Footer, layout
-- **Client Components** (`'use client'`): SearchBar, VideoList, SortTabs, VideoChart
+- **Client Components** (`'use client'`): SearchBar, VideoList, SortTabs, VideoChart, VideoCard
   - Use when: event handlers, hooks, browser APIs needed
 
 ### Key Components
@@ -121,10 +123,12 @@ User → SearchBar → API Routes → YouTube API Client → Cache Layer → You
 - Keyboard navigation (↑/↓/Enter/Esc)
 - Click-outside detection
 - Loading states and error handling
+- **Used for**: Channel search (not keyword search)
 
 **VideoCard** (`components/VideoCard.tsx`)
 - Displays: thumbnail, title, stats (views, likes, comments, growth)
 - Badges: "新着" (New), "急上昇" (Trending)
+- **Tags display**: Shows up to 8 tags, clickable to search by tag
 - Uses `formatJapaneseNumber()` for all numbers
 
 **VideoChart** (`components/VideoChart.tsx`)
@@ -136,6 +140,7 @@ User → SearchBar → API Routes → YouTube API Client → Cache Layer → You
 - Controls: sortType (views/date/growth/comments/likes)
 - sortOrder (asc/desc) with smart defaults
 - Integrated with Zustand store
+- **Shared between**: Channel analysis and keyword search pages
 
 ### State Management (Zustand)
 
@@ -177,12 +182,30 @@ Functions to calculate video metrics:
 Vercel Analytics event tracking:
 - `trackChannelSearch()`, `trackChannelView()`, `trackSortChange()`, `trackShare()`, `trackError()`
 
+## Two Search Methods (Phase 5)
+
+### 1. Channel Analysis
+- **Page**: `/` (home) → `/channel/[id]`
+- **UI**: Red gradient card with SearchBar component
+- **API**: `/api/youtube/search` → `/api/youtube/channel/[id]`
+- **Features**: Latest 50 videos, charts, SNS sharing
+
+### 2. Keyword Search
+- **Page**: `/` (home) → `/keyword/[query]`
+- **UI**: Blue gradient card with simple input form
+- **API**: `/api/youtube/keyword?q={keyword}`
+- **Features**: Top 50 videos by views, tags display, same sorting as channel analysis
+
+**Important**: The keyword search page uses a dedicated keyword search input (NOT SearchBar component) to maintain search context.
+
 ## Styling Conventions
 
 ### Tailwind CSS
 - Theme colors via CSS variables in `globals.css`: `--background`, `--foreground`
 - Dark mode support with `dark:` prefix
-- Brand colors: Red (#FF0000) → Blue (#00D4FF) gradient
+- **Brand colors**:
+  - Channel analysis: Red (#FF0000) → Red-dark (#CC0000) gradient
+  - Keyword search: Blue (#00D4FF) → Blue-dark (#0099CC) gradient
 - Green theme for charts/success: #10b981 (emerald-500)
 
 ### Custom CSS Classes
@@ -230,8 +253,9 @@ import { formatJapaneseNumber } from '@/lib/format-utils';
 
 ### Key Interfaces
 - `YouTubeChannel` - Channel metadata (id, title, subscriberCount, etc.)
-- `YouTubeVideo` - Video with analytics (viewCount, likeRate, growthRate, isTrending, etc.)
+- `YouTubeVideo` - Video with analytics (viewCount, likeRate, growthRate, isTrending, tags, etc.)
 - `SortType` - 'views' | 'date' | 'growth' | 'comments' | 'likes'
+- `KeywordSearchResponse` - Keyword search API response (videos, query, count)
 
 ## Performance Optimizations
 
@@ -241,21 +265,29 @@ import { formatJapaneseNumber } from '@/lib/format-utils';
 4. **Caching** - 30-minute cache for all YouTube API responses
 5. **Image Optimization** - `next/image` for all thumbnails with lazy loading
 
+## Project Management
+
+### Ticket System
+- All features tracked in `/docs/NNN-*.md` (001-025)
+- **Phase 5 completed**: Tickets 020-025
+- Each ticket contains Todo checklist with `[x]` for completed items
+
+### Phases
+- **Phase 1-4**: ✅ Complete (Channel analysis, sorting, caching, OGP, deployment)
+- **Phase 5**: ✅ Complete (Keyword search, project rename, tags display)
+
 ## Production Deployment
 
 - **Platform**: Vercel
 - **Region**: hnd1 (Tokyo)
 - **Environment**: YOUTUBE_API_KEY, KV credentials, NEXT_PUBLIC_SITE_URL
-- See `DEPLOYMENT.md` for detailed deployment instructions
-- See `TESTING.md` for comprehensive testing checklist
+- Deployment URL: https://channel-scope.vercel.app (to be updated to youtube-scope)
 
 ## Project Status
 
-**Phases 1-4 complete. Phase 5 in planning.**
+**Phase 5 Complete (2025-01)**
 
-The application is deployed at: https://channel-scope.vercel.app
-
-### Completed Features (Phase 1-4)
+### All Features
 - ✅ Channel search with autocomplete
 - ✅ Latest 50 videos analysis
 - ✅ Multi-criteria sorting (5 types)
@@ -266,15 +298,7 @@ The application is deployed at: https://channel-scope.vercel.app
 - ✅ Contact page (GitHub Issues integration)
 - ✅ Legal pages (disclaimer, privacy)
 - ✅ Japanese number formatting (万/億)
-
-### Phase 5 Features (In Development)
-See `/docs/020-025-*.md` for detailed tickets.
-
-- ⏳ Project rename: チャンネルスコープ → YouTubeスコープ
-- ⏳ Keyword search API (`/api/youtube/keyword`)
-- ⏳ Keyword search page (`/keyword/[query]`)
-- ⏳ Home page update (2 search types)
-- ⏳ Video tags display in VideoCard
-- ⏳ Testing and documentation
-
-**Target completion**: 1 week from start
+- ✅ **Keyword search** (search by keyword, top 50 videos)
+- ✅ **Video tags display** (clickable, up to 8 per video)
+- ✅ **Two search methods** (channel analysis + keyword search)
+- ✅ **Project rename** (ChannelScope → YouTubeScope)
