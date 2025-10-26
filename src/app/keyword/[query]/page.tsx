@@ -1,22 +1,23 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Search, VideoIcon } from 'lucide-react';
 import Link from 'next/link';
 import { YouTubeVideo } from '@/types';
 import VideoList from '@/components/VideoList';
 import SortTabs from '@/components/SortTabs';
-import SearchBar from '@/components/SearchBar';
 import { trackError } from '@/lib/tracking';
 
 export default function KeywordSearchPage() {
   const params = useParams();
+  const router = useRouter();
   const query = decodeURIComponent(params.query as string);
 
   const [videos, setVideos] = useState<YouTubeVideo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [keywordQuery, setKeywordQuery] = useState('');
 
   // ページタイトルを設定
   useEffect(() => {
@@ -55,6 +56,14 @@ export default function KeywordSearchPage() {
 
     fetchKeywordResults();
   }, [query]);
+
+  // キーワード検索を実行
+  const handleKeywordSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (keywordQuery.trim()) {
+      router.push(`/keyword/${encodeURIComponent(keywordQuery.trim())}`);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -126,9 +135,28 @@ export default function KeywordSearchPage() {
         </Link>
       </div>
 
-      {/* 検索バー */}
+      {/* キーワード検索バー */}
       <div className="mb-6">
-        <SearchBar />
+        <form onSubmit={handleKeywordSearch} className="w-full">
+          <div className="relative">
+            <input
+              type="text"
+              value={keywordQuery}
+              onChange={(e) => setKeywordQuery(e.target.value)}
+              placeholder="別のキーワードで検索"
+              className="w-full pl-12 pr-24 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#00D4FF] focus:border-transparent transition-all duration-200"
+            />
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+              <Search className="w-5 h-5" />
+            </div>
+            <button
+              type="submit"
+              className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1.5 bg-gradient-to-r from-[#00D4FF] to-[#0099CC] text-white rounded-md text-sm font-medium hover:opacity-90 transition-opacity"
+            >
+              検索
+            </button>
+          </div>
+        </form>
       </div>
 
       {/* 検索結果ヘッダー */}

@@ -1,14 +1,24 @@
 'use client';
 
-import { Search, TrendingUp, BarChart3, Users } from 'lucide-react';
+import { useState } from 'react';
+import { Search, TrendingUp, BarChart3, Users, Hash } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import SearchBar from '@/components/SearchBar';
 
 export default function Home() {
+  const router = useRouter();
+  const [keywordQuery, setKeywordQuery] = useState('');
+
   const features = [
     {
-      icon: <Search className="w-6 h-6" />,
-      title: 'かんたん検索',
-      description: 'チャンネル名を入力するだけで、すぐに分析を開始できます。',
+      icon: <Users className="w-6 h-6" />,
+      title: 'チャンネル分析',
+      description: 'チャンネル名で検索して、最新50本の動画を詳細に分析します。',
+    },
+    {
+      icon: <Hash className="w-6 h-6" />,
+      title: 'キーワード検索',
+      description: 'キーワードで人気動画を検索し、動画企画のヒントを発見します。',
     },
     {
       icon: <TrendingUp className="w-6 h-6" />,
@@ -20,47 +30,125 @@ export default function Home() {
       title: '詳細な統計',
       description: '再生数、コメント率、いいね率など多角的な分析が可能です。',
     },
-    {
-      icon: <Users className="w-6 h-6" />,
-      title: '完全無料',
-      description: 'すべての機能を無料でご利用いただけます。',
-    },
   ];
+
+  // キーワード検索を実行
+  const handleKeywordSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (keywordQuery.trim()) {
+      router.push(`/keyword/${encodeURIComponent(keywordQuery.trim())}`);
+    }
+  };
 
   return (
     <div className="animate-fade-in">
       {/* ヒーローセクション */}
       <section className="bg-gradient-to-b from-white to-[#f5f5f5] dark:from-[#0a0a0a] dark:to-[#1a1a1a] py-20">
         <div className="container-custom">
-          <div className="max-w-3xl mx-auto text-center">
+          <div className="max-w-4xl mx-auto text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               <span className="text-gradient">YouTubeスコープ</span>で
               <br />
               動画企画をサポート
             </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
+            <p className="text-lg text-gray-600 dark:text-gray-400">
               配信者のための無料分析ツール。
               <br />
               チャンネル分析とキーワード検索で、次の一手を見つけましょう。
             </p>
+          </div>
 
-            {/* 検索フォーム */}
-            <div className="mb-8">
-              <SearchBar className="max-w-xl mx-auto" autoFocus />
+          {/* 2つの検索カード */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            {/* チャンネル分析カード */}
+            <div className="card hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-[#FF0000] to-[#CC0000] rounded-lg flex items-center justify-center">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold">チャンネル分析</h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    最新50本の動画を分析
+                  </p>
+                </div>
+              </div>
+
+              <SearchBar />
+
+              <div className="mt-4 text-xs text-gray-500 dark:text-gray-400">
+                <span>人気: </span>
+                <button
+                  onClick={() => router.push('/channel/UClRNDVoLt5IRfLg_LsXjwvw')}
+                  className="underline hover:text-[#FF0000] transition-colors mx-1"
+                >
+                  HIKAKIN TV
+                </button>
+                <button
+                  onClick={() => router.push('/channel/UCgMPP6RRjktV7krOfyUewqw')}
+                  className="underline hover:text-[#FF0000] transition-colors mx-1"
+                >
+                  はじめしゃちょー
+                </button>
+              </div>
             </div>
 
-            {/* サンプル検索 */}
-            <div className="text-sm text-gray-600 dark:text-gray-400">
-              <span>人気の検索: </span>
-              <button className="underline hover:text-[#FF0000] transition-colors mx-1">
-                HIKAKIN TV
-              </button>
-              <button className="underline hover:text-[#FF0000] transition-colors mx-1">
-                はじめしゃちょー
-              </button>
-              <button className="underline hover:text-[#FF0000] transition-colors mx-1">
-                東海オンエア
-              </button>
+            {/* キーワード検索カード */}
+            <div className="card hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-[#00D4FF] to-[#0099CC] rounded-lg flex items-center justify-center">
+                  <Hash className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold">キーワード検索</h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    人気動画から企画のヒント
+                  </p>
+                </div>
+              </div>
+
+              <form onSubmit={handleKeywordSearch}>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={keywordQuery}
+                    onChange={(e) => setKeywordQuery(e.target.value)}
+                    placeholder="検索キーワードを入力"
+                    className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#00D4FF] focus:border-transparent transition-all duration-200"
+                  />
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                    <Search className="w-5 h-5" />
+                  </div>
+                  <button
+                    type="submit"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1.5 bg-gradient-to-r from-[#00D4FF] to-[#0099CC] text-white rounded-md text-sm font-medium hover:opacity-90 transition-opacity"
+                  >
+                    検索
+                  </button>
+                </div>
+              </form>
+
+              <div className="mt-4 text-xs text-gray-500 dark:text-gray-400">
+                <span>例: </span>
+                <button
+                  onClick={() => router.push('/keyword/プログラミング')}
+                  className="underline hover:text-[#00D4FF] transition-colors mx-1"
+                >
+                  プログラミング
+                </button>
+                <button
+                  onClick={() => router.push('/keyword/料理')}
+                  className="underline hover:text-[#00D4FF] transition-colors mx-1"
+                >
+                  料理
+                </button>
+                <button
+                  onClick={() => router.push('/keyword/ゲーム実況')}
+                  className="underline hover:text-[#00D4FF] transition-colors mx-1"
+                >
+                  ゲーム実況
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -97,44 +185,96 @@ export default function Home() {
       <section className="py-20 bg-[#f5f5f5] dark:bg-[#1a1a1a]">
         <div className="container-custom">
           <h2 className="text-3xl font-bold text-center mb-12">
-            かんたん3ステップ
+            2つの分析方法
           </h2>
 
-          <div className="max-w-3xl mx-auto">
-            <div className="space-y-8">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-10 h-10 bg-[#FF0000] text-white rounded-full flex items-center justify-center font-bold">
-                  1
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* チャンネル分析の流れ */}
+            <div className="card">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-r from-[#FF0000] to-[#CC0000] rounded-lg flex items-center justify-center">
+                  <Users className="w-5 h-5 text-white" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-bold mb-2">チャンネル名を検索</h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    分析したいYouTubeチャンネル名を入力して検索します。
-                  </p>
+                <h3 className="text-xl font-bold">チャンネル分析</h3>
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-[#FF0000] text-white rounded-full flex items-center justify-center text-sm font-bold">
+                    1
+                  </div>
+                  <div className="text-sm">
+                    <strong>チャンネル名を検索</strong>
+                    <p className="text-gray-600 dark:text-gray-400 mt-1">
+                      分析したいチャンネル名を入力
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-[#FF0000] text-white rounded-full flex items-center justify-center text-sm font-bold">
+                    2
+                  </div>
+                  <div className="text-sm">
+                    <strong>データを自動取得</strong>
+                    <p className="text-gray-600 dark:text-gray-400 mt-1">
+                      最新50本の動画データを取得
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-[#FF0000] text-white rounded-full flex items-center justify-center text-sm font-bold">
+                    3
+                  </div>
+                  <div className="text-sm">
+                    <strong>結果を確認</strong>
+                    <p className="text-gray-600 dark:text-gray-400 mt-1">
+                      グラフや統計で成長を可視化
+                    </p>
+                  </div>
                 </div>
               </div>
+            </div>
 
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-10 h-10 bg-[#FF0000] text-white rounded-full flex items-center justify-center font-bold">
-                  2
+            {/* キーワード検索の流れ */}
+            <div className="card">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-r from-[#00D4FF] to-[#0099CC] rounded-lg flex items-center justify-center">
+                  <Hash className="w-5 h-5 text-white" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-bold mb-2">データを自動取得</h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    最新50本の動画データを自動で取得し、分析します。
-                  </p>
-                </div>
+                <h3 className="text-xl font-bold">キーワード検索</h3>
               </div>
-
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-10 h-10 bg-[#FF0000] text-white rounded-full flex items-center justify-center font-bold">
-                  3
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-[#00D4FF] text-white rounded-full flex items-center justify-center text-sm font-bold">
+                    1
+                  </div>
+                  <div className="text-sm">
+                    <strong>キーワードを入力</strong>
+                    <p className="text-gray-600 dark:text-gray-400 mt-1">
+                      調べたいジャンルやテーマを入力
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-lg font-bold mb-2">結果を確認</h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    グラフや統計データで、チャンネルの成長を可視化します。
-                  </p>
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-[#00D4FF] text-white rounded-full flex items-center justify-center text-sm font-bold">
+                    2
+                  </div>
+                  <div className="text-sm">
+                    <strong>人気動画を表示</strong>
+                    <p className="text-gray-600 dark:text-gray-400 mt-1">
+                      再生数順に最大50件を取得
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-[#00D4FF] text-white rounded-full flex items-center justify-center text-sm font-bold">
+                    3
+                  </div>
+                  <div className="text-sm">
+                    <strong>タグから学ぶ</strong>
+                    <p className="text-gray-600 dark:text-gray-400 mt-1">
+                      人気動画のタグで企画のヒントを発見
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
