@@ -1,8 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { Search } from 'lucide-react';
+import { Search, Instagram, Github } from 'lucide-react';
 import { useState } from 'react';
+
+// Xアイコン（カスタムSVG）
+const XIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+  </svg>
+);
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -47,6 +54,37 @@ export default function Header() {
             >
               お問い合わせ
             </Link>
+
+            {/* SNSリンク */}
+            <div className="flex items-center space-x-2 ml-2 pl-2 border-l border-gray-300 dark:border-gray-600">
+              <a
+                href="https://x.com/masayuki_kiwami"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 text-gray-600 dark:text-gray-400 hover:text-[#1DA1F2] transition-colors"
+                aria-label="X (Twitter)"
+              >
+                <XIcon className="w-5 h-5" />
+              </a>
+              <a
+                href="https://www.instagram.com/masayuki.kiwami/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 text-gray-600 dark:text-gray-400 hover:text-[#E4405F] transition-colors"
+                aria-label="Instagram"
+              >
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a
+                href="https://github.com/hohoemi-rabo/youtube-scope"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 text-gray-600 dark:text-gray-400 hover:text-[#333] dark:hover:text-white transition-colors"
+                aria-label="GitHub"
+              >
+                <Github className="w-5 h-5" />
+              </a>
+            </div>
           </nav>
 
           {/* モバイルメニューボタン */}
@@ -99,6 +137,41 @@ export default function Header() {
                 お問い合わせ
               </Link>
             </nav>
+
+            {/* モバイル用SNSリンク */}
+            <div className="mt-4 px-4">
+              <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">SNS</p>
+              <div className="flex items-center space-x-4">
+                <a
+                  href="https://x.com/masayuki_kiwami"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-gray-600 dark:text-gray-400 hover:text-[#1DA1F2] transition-colors"
+                  aria-label="X (Twitter)"
+                >
+                  <XIcon className="w-6 h-6" />
+                </a>
+                <a
+                  href="https://www.instagram.com/masayuki.kiwami/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-gray-600 dark:text-gray-400 hover:text-[#E4405F] transition-colors"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="w-6 h-6" />
+                </a>
+                <a
+                  href="https://github.com/hohoemi-rabo/youtube-scope"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-gray-600 dark:text-gray-400 hover:text-[#333] dark:hover:text-white transition-colors"
+                  aria-label="GitHub"
+                >
+                  <Github className="w-6 h-6" />
+                </a>
+              </div>
+            </div>
+
             <p className="mt-4 px-4 text-xs text-gray-600 dark:text-gray-400">
               配信者のための無料分析ツール
             </p>

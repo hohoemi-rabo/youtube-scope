@@ -63,7 +63,7 @@ User → SearchBar → API Routes → YouTube API Client → Cache Layer → You
 │   │   └── og/route.tsx   # Dynamic OGP image generation
 │   ├── channel/[id]/      # Channel detail page
 │   ├── keyword/[query]/   # Keyword search results page
-│   ├── contact/           # Contact page (GitHub Issues)
+│   ├── contact/           # Contact page (GitHub Issues + Instagram DM)
 │   ├── disclaimer/        # Disclaimer page
 │   ├── privacy/           # Privacy policy
 │   ├── layout.tsx         # Root layout
@@ -112,9 +112,23 @@ User → SearchBar → API Routes → YouTube API Client → Cache Layer → You
 ## Component Architecture
 
 ### Server vs Client Components
-- **Server Components** (default): Header, Footer, layout
-- **Client Components** (`'use client'`): SearchBar, VideoList, SortTabs, VideoChart, VideoCard
+- **Server Components** (default): layout, pages
+- **Client Components** (`'use client'`): Header, Footer, SearchBar, VideoList, SortTabs, VideoChart, VideoCard
   - Use when: event handlers, hooks, browser APIs needed
+
+### Layout Components
+
+**Header** (`components/Header.tsx`)
+- Client component with mobile menu state
+- SNS links: X, Instagram, GitHub (with custom X icon SVG)
+- Sticky positioning with responsive navigation
+- Links to: https://x.com/masayuki_kiwami, https://www.instagram.com/masayuki.kiwami/, https://github.com/hohoemi-rabo/youtube-scope
+
+**Footer** (`components/Footer.tsx`)
+- Client component (uses hooks for current year)
+- SNS icons with hover effects (brand colors)
+- Links to disclaimer, privacy policy, contact page
+- Same SNS links as Header
 
 ### Key Components
 
@@ -206,6 +220,8 @@ Vercel Analytics event tracking:
 - **Brand colors**:
   - Channel analysis: Red (#FF0000) → Red-dark (#CC0000) gradient
   - Keyword search: Blue (#00D4FF) → Blue-dark (#0099CC) gradient
+  - Instagram: Pink (#E4405F)
+  - X (Twitter): Light blue (#1DA1F2)
 - Green theme for charts/success: #10b981 (emerald-500)
 
 ### Custom CSS Classes
@@ -248,6 +264,16 @@ import { formatJapaneseNumber } from '@/lib/format-utils';
 1. Update `SortType` type in `types/index.ts`
 2. Add case in `sortVideos()` in `sort-utils.ts`
 3. Add option in `sortOptions` array in `SortTabs.tsx`
+
+**Using custom X (Twitter) icon:**
+```typescript
+// X icon is not available in lucide-react, use custom SVG
+const XIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+  </svg>
+);
+```
 
 ## TypeScript Types (`/src/types/`)
 
@@ -295,10 +321,11 @@ import { formatJapaneseNumber } from '@/lib/format-utils';
 - ✅ SNS sharing with dynamic OGP
 - ✅ Caching and rate limiting
 - ✅ Error handling and analytics
-- ✅ Contact page (GitHub Issues integration)
+- ✅ Contact page (2 methods: GitHub Issues + Instagram DM)
 - ✅ Legal pages (disclaimer, privacy)
 - ✅ Japanese number formatting (万/億)
 - ✅ **Keyword search** (search by keyword, top 50 videos)
 - ✅ **Video tags display** (clickable, up to 8 per video)
 - ✅ **Two search methods** (channel analysis + keyword search)
 - ✅ **Project rename** (ChannelScope → YouTubeScope)
+- ✅ **SNS integration** (Header/Footer with X, Instagram, GitHub links)

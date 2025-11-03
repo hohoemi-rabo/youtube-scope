@@ -1,10 +1,10 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowLeft, MessageCircle, Github, HelpCircle, ExternalLink, CheckCircle } from 'lucide-react';
+import { ArrowLeft, MessageCircle, Github, HelpCircle, ExternalLink, CheckCircle, Instagram } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'お問い合わせ | YouTubeスコープ',
-  description: 'YouTubeスコープへのお問い合わせ方法とGitHub Issuesの使い方',
+  description: 'YouTubeスコープへのお問い合わせ方法。GitHub IssuesまたはInstagramダイレクトメッセージでお気軽にどうぞ。',
 };
 
 export default function ContactPage() {
@@ -27,29 +27,71 @@ export default function ContactPage() {
         </p>
       </div>
 
-      {/* お問い合わせボタン（目立つように） */}
-      <div className="card bg-gradient-to-r from-[#FF0000] to-[#00D4FF] text-white mb-8">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <MessageCircle className="w-8 h-8 flex-shrink-0 mt-1" />
-            <div>
-              <h2 className="text-xl font-bold mb-2">GitHub Issuesでお問い合わせ</h2>
-              <p className="text-sm opacity-90">
-                ご質問や不具合報告は、GitHub Issuesで受け付けています。<br />
-                初めての方でも大丈夫です！下記の使い方をご覧ください。
-              </p>
+      {/* 2つのお問い合わせ方法 */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold mb-4 text-center">お問い合わせ方法を選択してください</h2>
+        <div className="grid md:grid-cols-2 gap-4">
+          {/* GitHub Issues */}
+          <div className="card bg-gradient-to-br from-gray-900 to-gray-700 dark:from-gray-800 dark:to-gray-900 text-white">
+            <div className="flex flex-col h-full">
+              <div className="flex items-start gap-3 mb-4">
+                <Github className="w-8 h-8 flex-shrink-0" />
+                <div>
+                  <h3 className="text-xl font-bold mb-2">GitHub Issues</h3>
+                  <p className="text-sm opacity-90">
+                    過去の質問を検索できる<br />
+                    公開されたやり取りで透明性が高い
+                  </p>
+                </div>
+              </div>
+              <div className="mt-auto">
+                <a
+                  href="https://github.com/hohoemi-rabo/youtube-scope/issues"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg font-bold hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
+                >
+                  <Github className="w-5 h-5" />
+                  お問い合わせする
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+                <p className="text-xs opacity-75 mt-2 text-center">
+                  ※ GitHubアカウントが必要です
+                </p>
+              </div>
             </div>
           </div>
-          <a
-            href="https://github.com/hohoemi-rabo/channel-scope/issues"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-shrink-0 px-6 py-3 bg-white text-gray-900 rounded-lg font-bold hover:bg-gray-100 transition-colors flex items-center gap-2"
-          >
-            <Github className="w-5 h-5" />
-            お問い合わせする
-            <ExternalLink className="w-4 h-4" />
-          </a>
+
+          {/* Instagram DM */}
+          <div className="card bg-gradient-to-br from-purple-500 to-pink-500 text-white">
+            <div className="flex flex-col h-full">
+              <div className="flex items-start gap-3 mb-4">
+                <Instagram className="w-8 h-8 flex-shrink-0" />
+                <div>
+                  <h3 className="text-xl font-bold mb-2">Instagram DM</h3>
+                  <p className="text-sm opacity-90">
+                    個別にやり取りできる<br />
+                    お気軽にメッセージを送れる
+                  </p>
+                </div>
+              </div>
+              <div className="mt-auto">
+                <a
+                  href="https://www.instagram.com/masayuki.kiwami/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full px-4 py-3 bg-white text-gray-900 rounded-lg font-bold hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
+                >
+                  <Instagram className="w-5 h-5" />
+                  DMを送る
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+                <p className="text-xs opacity-75 mt-2 text-center">
+                  ※ Instagramアカウントが必要です
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -88,7 +130,7 @@ export default function ContactPage() {
                 下記のボタンをクリックして、GitHub Issuesのページを開きます。
               </p>
               <a
-                href="https://github.com/hohoemi-rabo/channel-scope/issues"
+                href="https://github.com/hohoemi-rabo/youtube-scope/issues"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg hover:opacity-80 transition-opacity"
@@ -248,16 +290,29 @@ export default function ContactPage() {
 
         {/* お問い合わせボタン（再表示） */}
         <div className="text-center">
-          <a
-            href="https://github.com/hohoemi-rabo/channel-scope/issues"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#FF0000] to-[#00D4FF] text-white rounded-lg font-bold text-lg hover:opacity-90 transition-opacity"
-          >
-            <Github className="w-6 h-6" />
-            GitHub Issuesでお問い合わせ
-            <ExternalLink className="w-5 h-5" />
-          </a>
+          <h2 className="text-2xl font-bold mb-4">今すぐお問い合わせ</h2>
+          <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+            <a
+              href="https://github.com/hohoemi-rabo/youtube-scope/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center gap-2 px-6 py-6 bg-gradient-to-br from-gray-900 to-gray-700 dark:from-gray-800 dark:to-gray-900 text-white rounded-lg font-bold text-lg hover:opacity-90 transition-opacity"
+            >
+              <Github className="w-8 h-8" />
+              <span>GitHub Issues</span>
+              <ExternalLink className="w-4 h-4" />
+            </a>
+            <a
+              href="https://www.instagram.com/masayuki.kiwami/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center gap-2 px-6 py-6 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-lg font-bold text-lg hover:opacity-90 transition-opacity"
+            >
+              <Instagram className="w-8 h-8" />
+              <span>Instagram DM</span>
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          </div>
         </div>
       </div>
 
